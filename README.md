@@ -87,3 +87,5 @@ You can contact the authors of the  [AutoGP paper](https://arxiv.org/abs/1610.05
 
 # Acknowledgements
 The code to support triangular matrices operations under `autogp/util/tf_ops` was taken from the GPflow repository (Hensman, Matthews et al. GPflow, http://github.com/GPflow/GPflow, 2016).
+
+The CUDA compilation tricks use code taken from [objdetect](https://pypkg.com/pypi/objdect/f/setup.py) by [duinodu](https://github.com/duinodu) under the MIT licence
