@@ -72,67 +72,91 @@ class TestSimpleFull(TestGaussianProcess):
         cls.session.run(tf.initialize_all_variables())
 
     def test_simple_entropy(self):
-        entropy = TestSimpleFull.entropy(weights=[1.0],
-                                         means=[[[1.0]]],
-                                         covars=[[[[1.0]]]])
-        self.assertAlmostEqual(entropy, 0.5 * (np.log(2 * np.pi) + np.log(2.0)), SIG_FIGS)
+        entropy = TestSimpleFull.entropy(
+            weights=[1.0],
+            means=[[[1.0]]],
+            covars=[[[[1.0]]]])
+        np.testing.assert_almost_equal(
+            entropy,
+            0.5 * (np.log(2 * np.pi) + np.log(2.0)),
+            SIG_FIGS)
 
     def test_small_covar_entropy(self):
-        entropy = TestSimpleFull.entropy(weights=[1.0],
-                                         means=[[[1.0]]],
-                                         covars=[[[[1e-10]]]])
-        self.assertAlmostEqual(entropy, 0.5 * (np.log(2 * np.pi) + np.log(2 * 1e-20)), SIG_FIGS)
+        entropy = TestSimpleFull.entropy(
+            weights=[1.0],
+            means=[[[1.0]]],
+            covars=[[[[1e-10]]]])
+        np.testing.assert_almost_equal(
+            entropy,
+            0.5 * (np.log(2 * np.pi) + np.log(2 * 1e-20)),
+            SIG_FIGS)
 
     def test_large_covar_entropy(self):
-        entropy = TestSimpleFull.entropy(weights=[1.0],
-                                         means=[[[1.0]]],
-                                         covars=[[[[1e10]]]])
-        self.assertAlmostEqual(entropy, 0.5 * (np.log(2 * np.pi) + np.log(2 * 1e20)), SIG_FIGS)
+        entropy = TestSimpleFull.entropy(
+            weights=[1.0],
+            means=[[[1.0]]],
+            covars=[[[[1e10]]]])
+        np.testing.assert_almost_equal(
+            entropy,
+            0.5 * (np.log(2 * np.pi) + np.log(2 * 1e20)),
+            SIG_FIGS)
 
     def test_simple_cross_ent(self):
-        cross_ent = TestSimpleFull.cross_ent(weights=[1.0],
-                                             means=[[[1.0]]],
-                                             covars=[[[[1.0]]]],
-                                             kernel_chol=[[[1.0]]])
-        self.assertAlmostEqual(cross_ent, -0.5 * (np.log(2 * np.pi) + np.log(1.0) + 2.0),
-                               SIG_FIGS)
+        cross_ent = TestSimpleFull.cross_ent(
+            weights=[1.0],
+            means=[[[1.0]]],
+            covars=[[[[1.0]]]],
+            kernel_chol=[[[1.0]]])
+        np.testing.assert_almost_equal(
+            cross_ent,
+            -0.5 * (np.log(2 * np.pi) + np.log(1.0) + 2.0),
+            SIG_FIGS)
 
     def test_small_cross_ent(self):
-        cross_ent = TestSimpleFull.cross_ent(weights=[1.0],
-                                             means=[[[1e-10]]],
-                                             covars=[[[[1e-10]]]],
-                                             kernel_chol=[[[1e-10]]])
-        self.assertAlmostEqual(cross_ent, -0.5 * (np.log(2 * np.pi) + np.log(1e-20) + 2.0),
-                               SIG_FIGS)
+        cross_ent = TestSimpleFull.cross_ent(
+            weights=[1.0],
+            means=[[[1e-10]]],
+            covars=[[[[1e-10]]]],
+            kernel_chol=[[[1e-10]]])
+        np.testing.assert_almost_equal(
+            cross_ent,
+            -0.5 * (np.log(2 * np.pi) + np.log(1e-20) + 2.0),
+            SIG_FIGS)
 
     def test_large_cross_ent(self):
-        cross_ent = TestSimpleFull.cross_ent(weights=[1.0],
-                                             means=[[[1e10]]],
-                                             covars=[[[[1e10]]]],
-                                             kernel_chol=[[[1e10]]])
-        self.assertAlmostEqual(cross_ent, -0.5 * (np.log(2 * np.pi) + np.log(1e20) + 2.0),
-                               SIG_FIGS)
+        cross_ent = TestSimpleFull.cross_ent(
+            weights=[1.0],
+            means=[[[1e10]]],
+            covars=[[[[1e10]]]],
+            kernel_chol=[[[1e10]]])
+        np.testing.assert_almost_equal(
+            cross_ent,
+            -0.5 * (np.log(2 * np.pi) + np.log(1e20) + 2.0),
+            SIG_FIGS)
 
     def test_simple_interim_vals(self):
-        kern_prods, kern_sums = TestSimpleFull.interim_vals(kernel_chol=[[[1.0]]],
-                                                            inducing_inputs=[[[1.0]]],
-                                                            train_inputs=[[1.0]])
-        self.assertAlmostEqual(kern_prods, 1.0, SIG_FIGS)
-        self.assertAlmostEqual(kern_sums, 0.0, SIG_FIGS)
+        kern_prods, kern_sums = TestSimpleFull.interim_vals(
+            kernel_chol=[[[1.0]]],
+            inducing_inputs=[[[1.0]]],
+            train_inputs=[[1.0]])
+        np.testing.assert_almost_equal(kern_prods, 1.0, SIG_FIGS)
+        np.testing.assert_almost_equal(kern_sums, 0.0, SIG_FIGS)
 
     def test_small_interim_vals(self):
-        kern_prods, kern_sums = TestSimpleFull.interim_vals(kernel_chol=[[[1e-8]]],
-                                                            inducing_inputs=[[[1e-8]]],
-                                                            train_inputs=[[1e-8]])
-        self.assertAlmostEqual(kern_prods, 1e16, SIG_FIGS)
-        self.assertAlmostEqual(kern_sums, 1 - 1e16, SIG_FIGS)
-        
+        kern_prods, kern_sums = TestSimpleFull.interim_vals(
+            kernel_chol=[[[1e-8]]],
+            inducing_inputs=[[[1e-8]]],
+            train_inputs=[[1e-8]])
+        np.testing.assert_almost_equal(kern_prods, 1e16, SIG_FIGS)
+        np.testing.assert_almost_equal(kern_sums, 1 - 1e16, SIG_FIGS)
+
     def test_large_interim_vals(self):
-        kern_prods, kern_sums = TestSimpleFull.interim_vals(kernel_chol=[[[1e8]]],
-                                                            inducing_inputs=[[[1e8]]],
-                                                            train_inputs=[[1e8]])
-        self.assertAlmostEqual(kern_prods, 1e-8, SIG_FIGS)
-        self.assertAlmostEqual(kern_sums, 1 - 1e-8, SIG_FIGS)
+        kern_prods, kern_sums = TestSimpleFull.interim_vals(
+            kernel_chol=[[[1e8]]],
+            inducing_inputs=[[[1e8]]],
+            train_inputs=[[1e8]])
+        np.testing.assert_almost_equal(kern_prods, 1e-8, SIG_FIGS)
+        np.testing.assert_almost_equal(kern_sums, 1 - 1e-8, SIG_FIGS)
 
     def test_multiple_inputs_interim_vals(self):
         inducing_distances = np.array([[1.0,          np.exp(-0.5), np.exp(-2.0)],
@@ -154,12 +178,13 @@ class TestSimpleFull(TestGaussianProcess):
         np.testing.assert_almost_equal(kern_sums[0], real_kern_sums, SIG_FIGS)
 
     def test_simple_sample_info(self):
-        mean, var = TestSimpleFull.sample_info(kern_prods=[[[2.0]]],
-                                               kern_sums=[[3.0]],
-                                               means=[[4.0]],
-                                               covars=[[[5.0]]])
-        self.assertAlmostEqual(mean, 8.0, SIG_FIGS)
-        self.assertAlmostEqual(var, 103.0, SIG_FIGS)
+        mean, var = TestSimpleFull.sample_info(
+            kern_prods=[[[2.0]]],
+            kern_sums=[[3.0]],
+            means=[[4.0]],
+            covars=[[[5.0]]])
+        np.testing.assert_almost_equal(mean, 8.0, SIG_FIGS)
+        np.testing.assert_almost_equal(var, 103.0, SIG_FIGS)
 
     def test_multi_sample_info(self):
         mean, var = TestSimpleFull.sample_info(kern_prods=[[[1.0, 2.0],
@@ -192,50 +217,66 @@ class TestSimpleDiag(TestGaussianProcess):
         entropy = TestSimpleDiag.entropy(weights=[1.0],
                                          means=[[[1.0]]],
                                          covars=[[[1.0]]])
-        self.assertAlmostEqual(entropy, 0.5 * (np.log(2 * np.pi) + np.log(2.0)), SIG_FIGS)
+        np.testing.assert_almost_equal(
+            entropy,
+            0.5 * (np.log(2 * np.pi) + np.log(2.0)),
+            SIG_FIGS)
 
     def test_small_covar_entropy(self):
         entropy = TestSimpleDiag.entropy(weights=[1.0],
                                          means=[[[1.0]]],
                                          covars=[[[1e-10]]])
-        self.assertAlmostEqual(entropy, 0.5 * (np.log(2 * np.pi) + np.log(2 * 1e-10)), SIG_FIGS)
+        np.testing.assert_almost_equal(
+            entropy,
+            0.5 * (np.log(2 * np.pi) + np.log(2 * 1e-10)),
+            SIG_FIGS)
 
     def test_large_covar_entropy(self):
         entropy = TestSimpleDiag.entropy(weights=[1.0],
                                          means=[[[1.0]]],
                                          covars=[[[1e10]]])
-        self.assertAlmostEqual(entropy, 0.5 * (np.log(2 * np.pi) + np.log(2 * 1e10)), SIG_FIGS)
+        np.testing.assert_almost_equal(
+            entropy,
+            0.5 * (np.log(2 * np.pi) + np.log(2 * 1e10)),
+            SIG_FIGS)
 
     def test_simple_cross_ent(self):
         cross_ent = TestSimpleDiag.cross_ent(weights=[1.0],
                                              means=[[[1.0]]],
                                              covars=[[[1.0]]],
                                              kernel_chol=[[[1.0]]])
-        self.assertAlmostEqual(cross_ent, -0.5 * (np.log(2 * np.pi) + 2.0), SIG_FIGS)
+        np.testing.assert_almost_equal(
+            cross_ent,
+            -0.5 * (np.log(2 * np.pi) + 2.0),
+            SIG_FIGS)
 
     def test_small_cross_ent(self):
         cross_ent = TestSimpleDiag.cross_ent(weights=[1.0],
                                              means=[[[1e-10]]],
                                              covars=[[[1e-10]]],
                                              kernel_chol=[[[1e-10]]])
-        self.assertAlmostEqual(cross_ent, -0.5 * (np.log(2 * np.pi) + np.log(1e-20) + 1.0 + 1e10),
-                               SIG_FIGS)
+        np.testing.assert_almost_equal(
+            cross_ent,
+            -0.5 * (np.log(2 * np.pi) + np.log(1e-20) + 1.0 + 1e10),
+            SIG_FIGS)
 
     def test_large_cross_ent(self):
         cross_ent = TestSimpleDiag.cross_ent(weights=[1.0],
                                              means=[[[1e10]]],
                                              covars=[[[1e10]]],
                                              kernel_chol=[[[1e10]]])
-        self.assertAlmostEqual(cross_ent, -0.5 * (np.log(2 * np.pi) + np.log(1e20) + 1.0 + 1e-10),
-                               SIG_FIGS)
+        np.testing.assert_almost_equal(
+            cross_ent,
+            -0.5 * (np.log(2 * np.pi) + np.log(1e20) + 1.0 + 1e-10),
+            SIG_FIGS)
 
     def test_simple_sample_info(self):
         mean, var = TestSimpleDiag.sample_info(kern_prods=[[[2.0]]],
                                                kern_sums=[[3.0]],
                                                means=[[4.0]],
                                                covars=[[5.0]])
-        self.assertAlmostEqual(mean, 8.0, SIG_FIGS)
-        self.assertAlmostEqual(var, 23.0, SIG_FIGS)
+        np.testing.assert_almost_equal(mean, 8.0, SIG_FIGS)
+        np.testing.assert_almost_equal(var, 23.0, SIG_FIGS)
 
     def test_multi_sample_info(self):
         mean, var = TestSimpleDiag.sample_info(kern_prods=[[[1.0, 2.0],
@@ -294,9 +335,14 @@ class TestMultiFull(TestGaussianProcess):
         n22_2 = scipy.stats.multivariate_normal.logpdf([7.0, 8.0], [7.0, 8.0], [[2.00, 2.20],
                                                                                 [2.20, 5.30]])
         true_ent = -(
-            0.7 * scipy.misc.logsumexp([np.log(0.7) + n11_1 + n11_2, np.log(0.3) + n12_1 + n12_2]) +
-            0.3 * scipy.misc.logsumexp([np.log(0.7) + n21_1 + n21_2, np.log(0.3) + n22_1 + n22_2]))
-        self.assertAlmostEqual(entropy, true_ent, SIG_FIGS - 4)
+            0.7 * scipy.misc.logsumexp(
+                [np.log(0.7) + n11_1 + n11_2, np.log(0.3) + n12_1 + n12_2]
+            ) +
+            0.3 * scipy.misc.logsumexp(
+                [np.log(0.7) + n21_1 + n21_2, np.log(0.3) + n22_1 + n22_2]
+            )
+        )
+        np.testing.assert_almost_equal(entropy, true_ent, SIG_FIGS - 4)
 
     def test_cross_ent(self):
         cross_ent = TestMultiFull.cross_ent(weights=[0.3, 0.7],
@@ -340,9 +386,14 @@ class TestMultiFull(TestGaussianProcess):
         t12 = np.trace(p12)
         t21 = np.trace(p21)
         t22 = np.trace(p22)
-        self.assertAlmostEqual(cross_ent, (0.3 * (n11 - 0.5 * t11 + n12 - 0.5 * t12) +
-                                           0.7 * (n21 - 0.5 * t21 + n22 - 0.5 * t22)),
-                               SIG_FIGS)
+        np.testing.assert_almost_equal(
+            cross_ent,
+            (
+                0.3 * (n11 - 0.5 * t11 + n12 - 0.5 * t12) +
+                0.7 * (n21 - 0.5 * t21 + n22 - 0.5 * t22)
+            ),
+            SIG_FIGS
+        )
 
     def test_interim_vals(self):
         kern_prods, kern_sums = TestMultiFull.interim_vals(kernel_chol=[[[1.0, 0.0],
